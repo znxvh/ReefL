@@ -1,0 +1,88 @@
+esphome:
+  name: reef_led_controller
+  platform: ESP32
+  board: esp32dev
+
+wifi:
+  ssid: "WiFi_ADIN"
+  password: "WiFi_SIFREN"
+
+logger:
+
+api:
+  password: "reef123"
+
+ota:
+  password: "reef123"
+
+output:
+  - platform: ledc
+    pin: GPIO14
+    id: blue_led
+    frequency: 5000 Hz
+  - platform: ledc
+    pin: GPIO27
+    id: uv_led
+    frequency: 5000 Hz
+  - platform: ledc
+    pin: GPIO12
+    id: white_led
+    frequency: 5000 Hz
+
+light:
+  - platform: monochromatic
+    name: "Royal Blue"
+    output: blue_led
+    id: blue_channel
+    default_transition_length: 3s
+  - platform: monochromatic
+    name: "UV Channel"
+    output: uv_led
+    id: uv_channel
+    default_transition_length: 3s
+  - platform: monochromatic
+    name: "Cool White"
+    output: white_led
+    id: white_channel
+    default_transition_length: 3s
+
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+
+sun:
+  latitude: 38.4237
+  longitude: 27.1428
+
+automation:
+  - alias: "Gün doğumu simülasyonu"
+    trigger:
+      sun:
+        event: sunrise
+        offset: "-00:15:00"
+    then:
+      - light.turn_on:
+          id: blue_channel
+          brightness: 0.1
+          transition: 60s
+      - delay: 10min
+      - light.turn_on:
+          id: white_channel
+          brightness: 0.4
+          transition: 120s
+
+  - alias: "Gün batımı simülasyonu"
+    trigger:
+      sun:
+        event: sunset
+        offset: "00:15:00"
+    then:
+      - light.dim_relative:
+          id: white_channel
+          relative_brightness: -0.4
+          transition: 120s
+      - delay: 10min
+      - light.dim_relative:
+          id: blue_channel
+          relative_brightness: -0.1
+          transition: 60s
