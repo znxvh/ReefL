@@ -1,0 +1,77 @@
+# GÜN DOĞUMU – 06:00
+  - alias: "Zoa & LPS - Gün doğumu başlasın"
+    trigger:
+      platform: time
+      at: "06:00:00"
+    then:
+      - light.turn_on:
+          id: blue_channel
+          brightness: 0.1
+          transition: 120s
+
+# SABAH BEYAZ IŞIK EKLE – 08:00
+  - alias: "Zoa & LPS - Beyaz aç"
+    trigger:
+      platform: time
+      at: "08:00:00"
+    then:
+      - light.turn_on:
+          id: white_channel
+          brightness: 0.2
+          transition: 60s
+
+# GÜNDÜZ – ANA PARLAKLIK (10:00)
+  - alias: "Zoa & LPS - Ana ışık parlaklığı"
+    trigger:
+      platform: time
+      at: "10:00:00"
+    then:
+      - light.turn_on:
+          id: blue_channel
+          brightness: 0.9
+          transition: 120s
+      - light.turn_on:
+          id: white_channel
+          brightness: 0.8
+          transition: 120s
+
+# AKŞAM – IŞIKLAR KISILMAYA BAŞLAR (18:00)
+  - alias: "Zoa & LPS - Gün batımı"
+    trigger:
+      platform: time
+      at: "18:00:00"
+    then:
+      - light.turn_on:
+          id: white_channel
+          brightness: 0.2
+          transition: 300s
+      - light.turn_on:
+          id: blue_channel
+          brightness: 0.5
+          transition: 300s
+
+# GECE – MOONLIGHT SADECE MAVİ (20:00)
+  - alias: "Zoa & LPS - Gece moonlight"
+    trigger:
+      platform: time
+      at: "20:00:00"
+    then:
+      - light.turn_off:
+          id: white_channel
+          transition: 60s
+      - light.turn_on:
+          id: blue_channel
+          brightness: 0.1
+          transition: 60s
+
+# TAMAMEN KAPAN – 00:00
+  - alias: "Zoa & LPS - Gece kapan"
+    trigger:
+      platform: time
+      at: "00:00:00"
+    then:
+      - light.turn_off:
+          id: blue_channel
+          transition: 30s
+      - light.turn_off:
+          id: white_channel
